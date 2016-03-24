@@ -7,15 +7,38 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // Initialize Parse
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Instagram"
+                configuration.clientKey = "rhuwegvbcxnzmbczxuyemkxspmqxqwlz"
+                configuration.server = "https://warm-coast-50595.herokuapp.com/parse"
+            })
+        )
+        
+        // check if user is logged in.
+        if PFUser.currentUser() != nil {
+            // if there is a logged in user then load the instagram view controller
+            print("user alraedy logged in")
+            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+            
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            
+            let homeViewController = storyBoard.instantiateViewControllerWithIdentifier("HomeView") as! HomeViewController
+            self.window?.rootViewController = homeViewController
+            self.window?.makeKeyAndVisible()
+        }
+
+        
         return true
     }
 
